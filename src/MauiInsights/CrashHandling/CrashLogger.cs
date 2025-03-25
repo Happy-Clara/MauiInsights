@@ -34,6 +34,7 @@ namespace MauiInsights.CrashHandling
                     Timestamp = DateTimeOffset.UtcNow,
                 };
                 telemetry.Context.Session.Id = _sessionId?.Value;
+                telemetry.Context.Operation.Id = _sessionId?.OperationId;
                 
                 var path = Path.Combine(_crashlogDirectory, $"{Guid.NewGuid()}{CrashLogExtension}");
                 using var writer = new StreamWriter(File.OpenWrite(path));

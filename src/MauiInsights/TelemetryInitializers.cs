@@ -31,7 +31,7 @@ namespace MauiInsights
             item.Context.Device.Model = DeviceInfo.Model;
             item.Context.Device.OemName = DeviceInfo.Manufacturer;
             item.Context.Device.OperatingSystem = DeviceInfo.Platform.ToString();
-            item.Context.Device.Type = DeviceInfo.DeviceType.ToString();
+            item.Context.Device.Type = "Browser";
             item.Context.Cloud.RoleName = AppInfo.PackageName;
         }
     }

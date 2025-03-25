@@ -1,6 +1,8 @@
 ﻿using MauiInsights.CrashHandling;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.AspNetCore;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
@@ -28,6 +30,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.AddSingleton(_sessionId);
         SetupTelemetryClient(appBuilder, configuration, configureTelemetry);
         SetupHttpDependecyTracking(appBuilder);
+//        appBuilder.Services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((m, o) => { });
         SetupPageViewTelemetry();
         SetupLogger(appBuilder, configuration);
         SetupTelemetryLifecycleEvents(appBuilder);
@@ -117,6 +120,7 @@ public static class MauiAppBuilderExtensions
         configureTelemetry(telemetryConfiguration);
         _client = new TelemetryClient(telemetryConfiguration);
         _client.Context.Session.Id = _sessionId?.Value;
+        _client.Context.Operation.Id = _sessionId?.OperationId;
         appBuilder.Services.AddSingleton(_client);
     }
 
@@ -195,4 +199,6 @@ public static class MauiAppBuilderExtensions
 public record SessionId
 {
     public string Value { get; } = Guid.NewGuid().ToString();
+    
+    public string OperationId { get; } = Guid.NewGuid().ToString().Replace("-", "");
 };

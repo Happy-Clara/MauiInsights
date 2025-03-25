@@ -6,19 +6,19 @@ namespace MauiInsights;
 
 internal class SessionInfoInitializer : ITelemetryInitializer
 {
-    private readonly string? _sessionId;
+    private readonly SessionId? _sessionId;
 
     public SessionInfoInitializer(SessionId? sessionId)
     {
-        _sessionId = sessionId?.Value;
+        _sessionId = sessionId;
     }
     public void Initialize(ITelemetry telemetry)
     {
         if (telemetry is ExceptionTelemetry) return;
         if (string.IsNullOrEmpty(telemetry.Context.Session.Id))
         {
-            telemetry.Context.Session.Id = _sessionId;
+            telemetry.Context.Session.Id = _sessionId?.Value;
+            telemetry.Context.Operation.Id = _sessionId?.OperationId;
         }
-
     }
 }
